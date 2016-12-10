@@ -23,7 +23,7 @@
                               name="form_text" id="form_text" rows="5" placeholder="Ako Vám pomôžeme?"></textarea>
                  </div>
                     <br>
-                <button type="submit" class="btn btn-success center-block">Poslať</button>
+                <button type="submit" name="submit" class="btn btn-success center-block">Poslať</button>
              </form><br>     
            </div>
            </div>
@@ -117,37 +117,35 @@ $(document).ready(function () {
 </script>
 
 <?php
- 
 
-error_reporting( error_reporting() & ~E_NOTICE ); /* Nedeklarovane premene vo formulari, tak mozno to nejde*/
-
-
-if(($_POST['form_meno'])!="" AND ($_POST['form_text'])!="" AND
-        ($_POST['form_mail'])!=""){
-    $meno = stripslashes($_POST['form_meno']);
-    $meno = mysql_real_escape_string($meno);
-    $mail = stripslashes($_POST['form_mail']);
-    $mail = mysql_real_escape_string($mail);
-    $text = stripslashes($_POST['form_text']);
-    $text = mysql_real_escape_string($text);
-    $p = "'". $meno . "' , '". $mail . " ','" . $text . "'";
-    $db=new Dbs();
-    $db->Insert("Spravy", "Od, Mail, Text", $p);
-    $db->Close();
-    echo "<script type='text/javascript'>"
-                 . "alert('Ďakujeme za Vášu správu, odpoveď Vám bude doručná "
-            . "na e-mail');"
-                 . "</script>";
+// najprv kontrolujem ci sa vobec formular odoslal
+if(isset($_POST['submit'])) {
+	// potom kontrolujem ci obsahuje vsetky udaje
+	if(strlen($_POST['form_meno']) > 0 && strlen($_POST['form_mail']) > 0 && strlen($_POST['form_text']) > 0){
+		$meno = stripslashes($_POST['form_meno']);
+		$meno = mysql_real_escape_string($meno);
+		$mail = stripslashes($_POST['form_mail']);
+		$mail = mysql_real_escape_string($mail);
+		$text = stripslashes($_POST['form_text']);
+		$text = mysql_real_escape_string($text);
+		$db=new Dbs();
+		$date=date("Ymd"); 
+		//echo $date;
+		$sql = "INSERT INTO spravy (Od, Mail, Text,Prijate) VALUES ('". $meno . "' , '". $mail . "','" . $text . "','". $date ."')";
+		//echo $sql;
+		mysql_query($sql);		
+		$db->Close();
+		echo "<script type='text/javascript'>"
+					 . "alert('Ďakujeme za Vášu správu, odpoveď Vám bude doručná "
+				. "na e-mail');"
+					 . "</script>";
+		exit;
+    } else {
+		 echo "<script type='text/javascript'>",
+		 "alert('Je potrebné vypniť všetky údaje');",
+		 "</script>";        
     }
-    else {
-        {   if (($_POST['form_meno'])!="" OR ($_POST['form_text'])!="" OR
-                ($_POST['form_mail'])!=""){
-                 echo "<script type='text/javascript'>"
-                 . "alert('Je potrebné vypniť všetky údaje');"
-                 . "</script>";
-            }
-        }
-    }
+}
 ?>
 
 <body>

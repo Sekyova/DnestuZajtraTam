@@ -25,7 +25,7 @@ if(isset($_POST['login']) and isset($_POST['heslo'])){
    $heslo = mysql_real_escape_string($heslo);
    
    $dbs = new Dbs();
-   $result = $dbs->Select("*", "Uzivatel", "Login='$login'");
+   $result = $dbs->Select("*", "uzivatel", "Login='$login'");
     $row = mysql_fetch_array($result);
     if($row !=null){
      if($row['Login']==$login and $row['Heslo']== $heslo){

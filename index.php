@@ -18,6 +18,18 @@
 i.fb,       span.fb{     color: green; }
 </script> 
 
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-XXXXX-Y', 'auto');
+ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
    <link rel="stylesheet" href="css/my.css">
  
  
@@ -58,7 +70,7 @@ include_once 'jumbo.php';
   <div class="row">
 	<div class="col-md-12" >
       <a href="galeria.php?p=f">
-       <img src="img/a.jpg" class="img-responsive img-rounded" alt="obrázok">
+       <img src="img/a.JPG" class="img-responsive img-rounded" alt="obrázok">
        <div class="text-nad-obrazkami">
             <h1>Nezabudnite očekovať  
         <strong>Galériu</strong> <br>sú tu fajn fotky a videa.</h1>
@@ -70,7 +82,7 @@ include_once 'jumbo.php';
       <!-- KONIEC STPLPCA 1 -->
     <div class="col-md-6"> 
         <a href="akcie.php?p=z">
-       <img src="img/b.jpg" class="img-responsive img-rounded" alt="obrázok">
+       <img src="img/b.JPG" class="img-responsive img-rounded" alt="obrázok">
        <div class="text-nad-obrazkami">
            <h1>Zažili sme</h1>
        </div>
@@ -80,7 +92,7 @@ include_once 'jumbo.php';
       <!-- KONIEC STPLPCA 2.1 -->
     <div class="col-md-6"> 
         <a href="akcie.php?p=c">
-      <img src="img/c.jpg" class="img-responsive img-rounded" alt="obrázok">
+      <img src="img/c.JPG" class="img-responsive img-rounded" alt="obrázok">
       <div class="text-nad-obrazkami center-block">
            <h1>Čaká nás</h1>
        </div>

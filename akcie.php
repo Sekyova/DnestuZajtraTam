@@ -68,10 +68,10 @@ include_once 'jumbo.php';
 					<h2>Nezabudame na buducnosť a planujeme.. </h2>
 				</div>
 				<br>
-				<p class="white">Chceli by sme organizovať tripy častejšie.. 
-				Krajiny kam sa určite chystame :)        </p>
+				<p class="white">
+				Krajiny kam sa určite chystame.. :)        </p>
                 </div>';
-        echo '<div class="col-md-12 text-center text-zeleny" style="height:30%; width:30%"> ';
+        echo '<div class="col-md-3 text-center text-zeleny" style="height:30%; width:30%"> ';
 				$akcie->VypisVsetkyNasledujuce();
         echo '</div>';
        

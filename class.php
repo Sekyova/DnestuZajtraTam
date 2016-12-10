@@ -15,7 +15,7 @@
 error_reporting(E_ALL ^ E_DEPRECATED);
 error_reporting( error_reporting() & ~E_NOTICE );
 
-
+include'dbconn.php';
 
 class Uzivatel {
     private
@@ -45,16 +45,16 @@ class Uzivatel {
 }
 
 class Dbs {
-    private $host="localhost"; // Host name 
+    /*private $host="localhost"; // Host name 
     private $db_user="root"; // Mysql username 
     private $db_heslo="root"; // Mysql password 
-    private $db="wawd"; // Database name 
+    private $db="wawd"; // Database name */
     private $db_link;
      
     public function Dbs (){ 
-        $link=mysql_connect("$this->host", "$this->db_user", "$this->db_heslo")or
+        $link=mysql_connect('localhost','root','root')or
                 die("Nie je mozne pripojit na server SQL"); 
-        mysql_select_db("$this->db")or die("Nie je mozne najst spravnu databazu");
+        mysql_select_db('wawd')or die("Nie je mozne najst spravnu databazu");
         $this->db_link = $link;
     }
     
@@ -130,10 +130,10 @@ class Spravy{
     }
     public function VypisVsetkySpravy(){
         $db = new Dbs();
-       $res = $db->SelectAllLeftJoinAndSort("Spravy.*, Uzivatel.Meno, Uzivatel.Priezvisko", 
-               "Spravy" , "Uzivatel",
-               "Spravy.ID_uzivatel=Uzivatel.ID_uzivatel",
-               "Spravy.Prijate", "DESC");
+       $res = $db->SelectAllLeftJoinAndSort("spravy.*, uzivatel.Meno, uzivatel.Priezvisko", 
+               "spravy" , "uzivatel",
+               "spravy.ID_uzivatel=uzivatel.ID_uzivatel",
+               "spravy.Prijate", "DESC");
         
       
        echo '
@@ -150,8 +150,8 @@ class Spravy{
         <th>Text správy</th>
         <th>Akcia</th>
         <th>Odpovedané dňa</th>
-        <th>Odpovedal</th>
-      </tr>
+		<th>Odpovedal</th>
+        </tr>
     </thead>
     <tbody>';
 	$r['Od']="";
@@ -196,14 +196,14 @@ class Spravy{
     
     public function OznacZaPrecitanu($id_spravy){
         $db = new Dbs();
-        $db->Update("Spravy", "Precitane=1", "ID_spravy = $id_spravy");
+        $db->Update("spravy", "Precitane=1", "ID_spravy = $id_spravy");
         $db->Close();
         
     }
     public function Odpovedat($id_spravy, $id_uzivatel, $mail){
         $datum = date();
         $db = new Dbs();
-        $db->Update("Spravy", "ID_uzivatel=$id_uzivatel, Precitane=1,"
+        $db->Update("spravy", "ID_uzivatel=$id_uzivatel, Precitane=1,"
                 . " Odpovedane = CURDATE()", "ID_spravy = $id_spravy");
         $db->Close();
         header("location: mailto:".$mail);
@@ -212,7 +212,7 @@ class Spravy{
    
     public function Vymaz($id_spravy){
         $db = new Dbs();
-        $db->Delete("Spravy", "ID_spravy = $id_spravy");
+        $db->Delete("spravy", "ID_spravy = $id_spravy");
         $db->Close();
     }
 }
@@ -221,11 +221,15 @@ class Spravy{
         public function Akcie(){
             
     }
-    
+	
+	
+	  
     public function VypisVsetkyZazite(){
        $db = new Dbs;
-       $r=$db->SelectAndSort("*", "Akcia", "Ukoncena=1", "Datum_konania", "DESC");
-           while ($row = mysql_fetch_array($r)) {
+	   $sql="SELECT * FROM akcia WHERE Ukoncena=1 ORDER BY Datum_konania DESC";
+	   $res = mysql_query($sql);
+	
+       while ($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
                $id=$row['ID_akcia'];
 			   $link=$row['Obrazok'];
 			   $obr=new Obrazok();
@@ -237,24 +241,26 @@ class Spravy{
         $db->Close();
     }
     
-    public function VypisVsetkyNasledujuce(){
-        $db = new Dbs;
-       $r=$db->SelectAndSort("*", "Akcia", "Ukoncena=0", "Datum_konania", "DESC");
-           while ($row = mysql_fetch_array($r)) {
+	public function VypisVsetkyNasledujuce(){
+       $db = new Dbs;
+	   $sql="SELECT * FROM akcia WHERE Ukoncena=0 ORDER BY Datum_konania DESC";
+	   $res = mysql_query($sql);	   
+       while ($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
                $id=$row['ID_akcia'];
 			   $link=$row['Obrazok'];
 			   $obr=new Obrazok();
-               echo '<li><h3><a href="akcie.php?p=c&id='.$id.'"';
+               echo '<li><h3><a href="akcie.php?p=z&id='.$id.'"';
                echo '">'; 
 			   echo $row['Nazov']. " ".$obr->Ukaz($link);
-			   echo '</a><h3></li>';
+			   echo '</a></h3></li>';
            }
         $db->Close();
     }
-   
+	
+	   
     public function ZobrazAkciu($id){
         $db = new Dbs();
-        $r = $db->Select("*", "Akcia", "ID_akcia=$id");
+        $r = $db->Select("*", "akcia", "ID_akcia=$id");
         $row=  mysql_fetch_assoc($r);
         $link=$row['Obrazok'];
         echo '<div class="text-center text-zeleny"><h1>';
